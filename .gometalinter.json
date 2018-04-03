@@ -1,0 +1,6 @@
+{
+  "Enable": ["deadcode", "dupl", "errcheck", "gas", "goconst", "gocyclo", "goimports", "golint", "gotype", "gotypex", "ineffassign", "interfacer", "lll", "maligned", "megacheck", "misspell", "safesql", "structcheck", "unconvert", "unparam", "varcheck", "vet"],
+  "Test": true,
+  "LineLength": 120,
+  "Deadline": "600s"
+}
