@@ -1,0 +1,24 @@
+language: go
+
+go:
+  - "1.9"
+  - "1.10"
+  - master
+
+env:
+  global:
+    - LINTER_VERSION=2.0.5
+
+before_install:
+  - curl -L -s "https://github.com/alecthomas/gometalinter/releases/download/v${LINTER_VERSION}/gometalinter-${LINTER_VERSION}-linux-amd64.tar.gz" -o gometalinter.tar.gz
+  - tar xf gometalinter.tar.gz
+  - mv "gometalinter-${LINTER_VERSION}-linux-amd64" "gometalinter"
+
+install:
+  - go get -v github.com/mattn/goveralls
+
+script:
+  - go test -coverprofile=tmp.coverprofile
+    # the following line is adapted from https://github.com/pierrre/gotestcover
+  - "test -n \"$COVERALLS_TOKEN\" && echo 'mode: atomic' >gorkov.coverprofile && go list ./... | xargs -n1 -I'{}' sh -c 'go test -covermode=atomic -coverprofile=tmp.coverprofile {} && tail -n +2 tmp.coverprofile >>gorkov.coverprofile' && goveralls -coverprofile=gorkov.coverprofile -service=travis-ci -repotoken \"$COVERALLS_TOKEN\""
+  - env PATH="gometalinter:gometalinter/linters:$PATH" gometalinter --config=.gometalinter.json .
